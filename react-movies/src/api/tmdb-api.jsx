@@ -1,5 +1,5 @@
 const { VITE_TMDB_KEY, VITE_TMDB_LANGUAGE, VITE_TMDB_REGION } = import.meta.env;
-const TMDB = "https://api.themoviedb.org/3";
+const API_BASE = "http://localhost:8080/api/movies";
 
 // --- helpers 
 
@@ -7,15 +7,17 @@ const defaultLang = VITE_TMDB_LANGUAGE || "en-US";
 const defaultRegion = VITE_TMDB_REGION || "IE";
 
 
-async function fetchTMDB(path, params = {}) {
-    const url = new URL(`${TMDB}/${path}`);
-    url.searchParams.set("api_key", VITE_TMDB_KEY);
+async function fetchAPI(path, params = {}) {
+    const url = new URL(`${API_BASE}/${path}`);
 
     Object.entries(params).forEach(([k, v]) => {
-        if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, v);
+        if (v !== undefined && v !== null && v !== "") {
+            url.searchParams.set(k, v);
+        }
     });
 
     const res = await fetch(url.toString());
+
     if (!res.ok) {
         let payload;
         try {
@@ -23,11 +25,14 @@ async function fetchTMDB(path, params = {}) {
         } catch {
             // ignore
         }
+
         const message =
-            (payload && (payload.status_message || payload.message)) ||
-            `TMDB error ${res.status}`;
+            (payload && payload.message) ||
+            `API error ${res.status}`;
+
         throw new Error(message);
     }
+
     return res.json();
 }
 
@@ -54,7 +59,7 @@ function optsFromKey(args) {
  */
 export const getMovies = (args) => {
     const { language, region, page } = optsFromKey(args);
-    return fetchTMDB("discover/movie", {
+    return fetchAPI("discover", {
         language,
         region,
         page,
@@ -63,6 +68,7 @@ export const getMovies = (args) => {
         sort_by: "popularity.desc",
     });
 };
+
 
 /**
  * Popular movies. Supports pagination.
