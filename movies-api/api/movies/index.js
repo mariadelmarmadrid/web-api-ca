@@ -7,6 +7,7 @@ import {
   getUpcomingMovies,
   getTopRatedMovies,
   getMovie,
+  getMovieImages,
   getMovieReviews,
   getMovieRecommendations,
   getMovieCredits,
@@ -44,6 +45,10 @@ router.get("/genres", asyncHandler(async (req, res) => {
 // Single movie
 router.get("/:id", asyncHandler(async (req, res) => {
   res.json(await getMovie({ id: req.params.id, ...req.query }));
+}));
+
+router.get("/:id/images", asyncHandler(async (req, res) => {
+  res.json(await getMovieImages({ id: req.params.id, ...req.query }));
 }));
 
 router.get("/:id/reviews", asyncHandler(async (req, res) => {

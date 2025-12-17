@@ -46,19 +46,19 @@ export const getUpcomingMovies = ({ language, region, page = 1 }) =>
 export const getTopRatedMovies = ({ language, region, page = 1 }) =>
     tmdbFetch("movie/top_rated", { language, region, page });
 
-export const getMovie = (id, language) =>
+export const getMovie = ({ id, language }) =>
     tmdbFetch(`movie/${id}`, { language });
 
-export const getMovieImages = (id, language) =>
+export const getMovieImages = ({ id, language }) =>
     tmdbFetch(`movie/${id}/images`, { language });
 
-export const getMovieReviews = (id, language) =>
+export const getMovieReviews = ({ id, language }) =>
     tmdbFetch(`movie/${id}/reviews`, { language });
 
-export const getMovieRecommendations = (id, language) =>
-    tmdbFetch(`movie/${id}/recommendations`, { language });
+export const getMovieRecommendations = ({ id, language, page = 1 }) =>
+    tmdbFetch(`movie/${id}/recommendations`, { language, page });
 
-export const getMovieCredits = (id, language) =>
+export const getMovieCredits = ({ id, language }) =>
     tmdbFetch(`movie/${id}/credits`, { language });
 
 export const getGenres = ({ language }) =>
