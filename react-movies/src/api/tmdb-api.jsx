@@ -58,15 +58,8 @@ function optsFromKey(args) {
  * queryKey: ['discover', { language, region, page }]
  */
 export const getMovies = (args) => {
-    const { language, region, page } = optsFromKey(args);
-    return fetchAPI("discover", {
-        language,
-        region,
-        page,
-        include_adult: "false",
-        include_video: "false",
-        sort_by: "popularity.desc",
-    });
+  const { language, region, page } = optsFromKey(args);
+  return fetchAPI("discover", { language, region, page });
 };
 
 
@@ -76,7 +69,7 @@ export const getMovies = (args) => {
  */
 export const getPopularMovies = (args) => {
     const { language, region, page } = optsFromKey(args);
-    return fetchTMDB("movie/popular", { language, region, page });
+    return fetchAPI("popular", { language, region, page });
 };
 
 
@@ -86,7 +79,7 @@ export const getPopularMovies = (args) => {
  */
 export const getNowPlayingMovies = (args) => {
     const { language, region, page } = optsFromKey(args);
-    return fetchTMDB("movie/now_playing", { language, region, page });
+    return fetchAPI("now-playing", { language, region, page });
 };
 
 /**
@@ -95,7 +88,7 @@ export const getNowPlayingMovies = (args) => {
  */
 export const getUpcomingMovies = (args) => {
     const { language, region, page } = optsFromKey(args);
-    return fetchTMDB("movie/upcoming", {
+    return fetchAPI("upcoming", {
         language,
         region,
         page,
@@ -110,7 +103,7 @@ export const getUpcomingMovies = (args) => {
  */
 export const getTopRatedMovies = (args) => {
     const { language, region, page } = optsFromKey(args);
-    return fetchTMDB("movie/top_rated", { language, region, page });
+    return fetchAPI("top-rated", { language, region, page });
 };
 
 // --- Single movie & related
@@ -121,7 +114,7 @@ export const getTopRatedMovies = (args) => {
  */
 export const getMovie = (args) => {
     const { id, language } = optsFromKey(args);
-    return fetchTMDB(`movie/${id}`, { language });
+    return fetchAPI(`${id}`, { language });
 };
 
 /**
@@ -130,7 +123,7 @@ export const getMovie = (args) => {
  */
 export const getMovieImages = (args) => {
     const { id } = optsFromKey(args);
-    return fetchTMDB(`movie/${id}/images`);
+    return fetchAPI(`${id}/images`);
 };
 
 /**
@@ -139,7 +132,7 @@ export const getMovieImages = (args) => {
  */
 export const getMovieReviews = (args) => {
     const { id, language } = optsFromKey(args);
-    return fetchTMDB(`movie/${id}/reviews`, { language });
+    return fetchAPI(`${id}/reviews`, { language });
 };
 
 /**
@@ -148,7 +141,7 @@ export const getMovieReviews = (args) => {
  */
 export const getMovieRecommendations = (args) => {
     const { id, language, page } = optsFromKey(args);
-    return fetchTMDB(`movie/${id}/recommendations`, { language, page });
+    return fetchAPI(`${id}/recommendations`, { language, page });
 };
 
 /**
@@ -157,7 +150,7 @@ export const getMovieRecommendations = (args) => {
  */
 export const getMovieCredits = (args) => {
     const { id, language } = optsFromKey(args);
-    return fetchTMDB(`movie/${id}/credits`, { language });
+    return fetchAPI(`${id}/credits`, { language });
 };
 
 // --- Genres
@@ -166,9 +159,8 @@ export const getMovieCredits = (args) => {
  * Genres list.
  * queryKey: ['genres', { language }]
  */
-export const getGenres = (args) => {
-    const { language } = optsFromKey(args);
-    return fetchTMDB("genre/movie/list", { language });
+export const getGenres = () => {
+    return fetchAPI("genres");
 };
 
 // --- People
@@ -179,7 +171,7 @@ export const getGenres = (args) => {
  */
 export const getPerson = (args) => {
     const { id, language } = optsFromKey(args);
-    return fetchTMDB(`person/${id}`, { language });
+    return fetchAPI(`person/${id}`, { language });
 };
 
 /**
@@ -188,5 +180,5 @@ export const getPerson = (args) => {
  */
 export const getPersonMovieCredits = (args) => {
     const { id, language } = optsFromKey(args);
-    return fetchTMDB(`person/${id}/movie_credits`, { language });
+    return fetchAPI(`person/${id}/movie_credits`, { language });
 };

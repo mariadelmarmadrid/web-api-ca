@@ -24,7 +24,14 @@ async function tmdbFetch(path, params = {}) {
 
 
 export const getMovies = ({ language, region, page = 1 }) =>
-    tmdbFetch("discover/movie", { language, region, page });
+  tmdbFetch("discover/movie", {
+    language,
+    region,
+    page,
+    include_adult: false,
+    include_video: false,
+    sort_by: "popularity.desc",
+  });
 
 
 export const getPopularMovies = ({ language, region, page = 1 }) =>
@@ -54,7 +61,7 @@ export const getMovieRecommendations = (id, language) =>
 export const getMovieCredits = (id, language) =>
     tmdbFetch(`movie/${id}/credits`, { language });
 
-export const getGenres = (language) =>
+export const getGenres = ({ language }) =>
     tmdbFetch("genre/movie/list", { language });
 
 export const getPerson = (id, language) =>
