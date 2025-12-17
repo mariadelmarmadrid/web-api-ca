@@ -64,8 +64,8 @@ export const getMovieCredits = ({ id, language }) =>
 export const getGenres = ({ language }) =>
     tmdbFetch("genre/movie/list", { language });
 
-export const getPerson = (id, language) =>
+export const getPerson = ({id, language}) =>
     tmdbFetch(`person/${id}`, { language });
 
-export const getPersonMovieCredits = (id, language) =>
+export const getPersonMovieCredits = ({id, language}) =>
     tmdbFetch(`person/${id}/movie_credits`, { language });

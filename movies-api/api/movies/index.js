@@ -12,6 +12,8 @@ import {
   getMovieRecommendations,
   getMovieCredits,
   getGenres,
+  getPerson,             
+  getPersonMovieCredits, 
 } from "../tmdb-api.js";
 
 const router = express.Router();
@@ -62,5 +64,18 @@ router.get("/:id/recommendations", asyncHandler(async (req, res) => {
 router.get("/:id/credits", asyncHandler(async (req, res) => {
   res.json(await getMovieCredits({ id: req.params.id, ...req.query }));
 }));
+
+// ---------- Person ----------
+
+// Person details
+router.get("/person/:id", asyncHandler(async (req, res) => {
+  res.json(await getPerson({ id: req.params.id, ...req.query }));
+}));
+
+// Person movie credits (filmography)
+router.get("/person/:id/movie_credits", asyncHandler(async (req, res) => {
+  res.json(await getPersonMovieCredits({ id: req.params.id, ...req.query }));
+}));
+
 
 export default router;
