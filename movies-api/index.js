@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import moviesRouter from './api/movies';
 import usersRouter from './api/users';
 import './db';
 import authenticate from './authenticate';
@@ -25,6 +26,8 @@ const port = process.env.PORT;
 app.use(cors());
 
 app.use(express.json());
+
+app.use('/api/movies', moviesRouter); 
 
 app.use('/api/users', usersRouter);
 
