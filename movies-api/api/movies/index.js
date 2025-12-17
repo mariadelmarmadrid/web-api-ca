@@ -1,5 +1,5 @@
-import express from 'express';
-import asyncHandler from 'express-async-handler';
+import express from "express";
+import asyncHandler from "express-async-handler";
 import {
   getMovies,
   getPopularMovies,
@@ -15,12 +15,12 @@ import {
 
 const router = express.Router();
 
-// movie routes to be added
-router.get('/discover', asyncHandler(async (req, res) => {
-    const discoverMovies = await getMovies();
-    res.status(200).json(discoverMovies);
+// Discover (home)
+router.get("/discover", asyncHandler(async (req, res) => {
+  res.json(await getMovies(req.query));
 }));
 
+// Lists
 router.get("/popular", asyncHandler(async (req, res) => {
   res.json(await getPopularMovies(req.query));
 }));
@@ -41,20 +41,21 @@ router.get("/genres", asyncHandler(async (req, res) => {
   res.json(await getGenres(req.query));
 }));
 
+// Single movie
 router.get("/:id", asyncHandler(async (req, res) => {
-  res.json(await getMovie(req.params.id, req.query.language));
+  res.json(await getMovie({ id: req.params.id, ...req.query }));
 }));
 
 router.get("/:id/reviews", asyncHandler(async (req, res) => {
-  res.json(await getMovieReviews(req.params.id, req.query));
+  res.json(await getMovieReviews({ id: req.params.id, ...req.query }));
 }));
 
 router.get("/:id/recommendations", asyncHandler(async (req, res) => {
-  res.json(await getMovieRecommendations(req.params.id, req.query));
+  res.json(await getMovieRecommendations({ id: req.params.id, ...req.query }));
 }));
 
 router.get("/:id/credits", asyncHandler(async (req, res) => {
-  res.json(await getMovieCredits(req.params.id, req.query.language));
+  res.json(await getMovieCredits({ id: req.params.id, ...req.query }));
 }));
 
 export default router;
