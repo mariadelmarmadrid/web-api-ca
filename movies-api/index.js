@@ -5,6 +5,7 @@ import moviesRouter from './api/movies';
 import usersRouter from './api/users';
 import './db';
 import authenticate from './authenticate';
+import favoritesRouter from "./api/favorites";
 
 dotenv.config();
 
@@ -30,6 +31,8 @@ app.use(express.json());
 app.use('/api/movies', moviesRouter); 
 
 app.use('/api/users', usersRouter);
+
+app.use("/api/favorites", favoritesRouter);
 
 app.use(errHandler);
 
