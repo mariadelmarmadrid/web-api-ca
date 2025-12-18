@@ -18,6 +18,8 @@ import PopularMoviesPage from "./pages/popularMoviesPage";
 import PersonPage from './pages/personPage';
 import CastAndCrewPage from './pages/castAndCrewPage';
 import AuthContextProvider from "./contexts/authContext";
+import LoginPage from "./pages/loginPage";
+import SignupPage from "./pages/signupPage";
 
 
 const queryClient = new QueryClient({
@@ -57,6 +59,9 @@ const App = () => {
               <Route path="/reviews/form" element={<AddMovieReviewPage />} />
 
               <Route path="/person/:id" element={<PersonPage />} />
+
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
