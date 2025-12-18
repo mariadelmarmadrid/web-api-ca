@@ -66,12 +66,15 @@ const MoviesContextProvider = (props) => {
 
     // ---------------- Favorites ----------------
     const addToFavorites = async (movie) => {
-        const newFavorite = await addFavorite(movie);
-        setFavorites((prev) =>
-            prev.some((f) => f.movieId === newFavorite.movieId)
-                ? prev
-                : [...prev, newFavorite]
-        );
+        const exists = favorites.some((f) => f.movieId === movie.id);
+        if (exists) return;
+
+        try {
+            const newFavorite = await addFavorite(movie);
+            setFavorites((prev) => [...prev, newFavorite]);
+        } catch (err) {
+            console.warn("Already in favorites");
+        }
     };
 
     const removeFromFavorites = async (movie) => {

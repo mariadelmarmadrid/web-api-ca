@@ -18,18 +18,19 @@ router.get("/", asyncHandler(async (req, res) => {
 router.post("/", authenticate, async (req, res) => {
     try {
         const favorite = await Favorite.create({
-            ...req.body,
             userId: req.user._id,
+            ...req.body,
         });
         res.status(201).json(favorite);
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(409).json({ message: "Already in favorites" });
+            return res.status(409).json({
+                message: "Movie already in favorites",
+            });
         }
         throw err;
     }
 });
-
 
 // DELETE /api/favorites/:id
 router.delete("/:id", authenticate, async (req, res) => {
