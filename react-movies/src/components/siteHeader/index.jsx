@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { MoviesContext } from "../../contexts/moviesContextValue";
+import { AuthContext } from "../../contexts/authContext";
 
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -24,18 +25,20 @@ const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 
 const COLORS = {
-  gradFrom: "#7E57C2", 
-  gradTo: "#AB47BC",   
-  text: "#FFFFFF",
-  textMuted: "rgba(255,255,255,0.75)",
-  pillHover: "rgba(255,255,255,0.14)",
-  pillActive: "rgba(255,255,255,0.22)",
-  border: "rgba(255,255,255,0.2)",
+    gradFrom: "#7E57C2",
+    gradTo: "#AB47BC",
+    text: "#FFFFFF",
+    textMuted: "rgba(255,255,255,0.75)",
+    pillHover: "rgba(255,255,255,0.14)",
+    pillActive: "rgba(255,255,255,0.22)",
+    border: "rgba(255,255,255,0.2)",
 };
 
 const SiteHeader = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const { region, setRegion, language, setLanguage } = useContext(MoviesContext);
+
+    const auth = useContext(AuthContext);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -44,13 +47,18 @@ const SiteHeader = () => {
 
     const menuOptions = [
         { label: "Home", path: "/" },
-        { label: "Favorites", path: "/movies/favorites" },
-        { label: "Watchlist", path: "/movies/watchlist" },
         { label: "Popular", path: "/movies/popular" },
         { label: "Now Playing", path: "/movies/now-playing" },
         { label: "Upcoming", path: "/movies/upcoming" },
         { label: "Top Rated", path: "/movies/top-rated" },
+        ...(auth.isAuthenticated
+            ? [
+                { label: "Favorites", path: "/movies/favorites" },
+                { label: "Watchlist", path: "/movies/watchlist" },
+            ]
+            : []),
     ];
+
 
     const isActive = (path) =>
         path === "/"
@@ -193,10 +201,46 @@ const SiteHeader = () => {
                                         <MenuItem value={"ES"}>Spain (ES)</MenuItem>
                                     </Select>
                                 </FormControl>
+                                <Divider orientation="vertical" flexItem sx={{ bgcolor: COLORS.border }} />
+
+                                {auth.isAuthenticated ? (
+                                    <Stack direction="row" spacing={1} alignItems="center">
+                                        <Typography variant="body2">
+                                            Welcome {auth.userName}
+                                        </Typography>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{ color: "white", borderColor: "white" }}
+                                            onClick={auth.signout}
+                                        >
+                                            Logout
+                                        </Button>
+                                    </Stack>
+                                ) : (
+                                    <Stack direction="row" spacing={1}>
+                                        <Button
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{ color: "white", borderColor: "white" }}
+                                            onClick={() => navigate("/login")}
+                                        >
+                                            Login
+                                        </Button>
+                                        <Button
+                                            size="small"
+                                            variant="contained"
+                                            onClick={() => navigate("/signup")}
+                                        >
+                                            Signup
+                                        </Button>
+                                    </Stack>
+                                )}
+
                             </Stack>
                         )}
 
-                        
+
                     </Box>
                 </Toolbar>
             </AppBar>
