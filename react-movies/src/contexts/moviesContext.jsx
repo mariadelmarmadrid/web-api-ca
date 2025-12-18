@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { MoviesContext } from "./moviesContextValue";
+import {
+    getFavorites,
+    addFavorite,
+    removeFavorite,
+} from "../api/favorites-api";
+
 
 const safeParse = (key, fallback) => {
     try {
@@ -12,9 +18,7 @@ const safeParse = (key, fallback) => {
 
 const MoviesContextProvider = (props) => {
     // Favorites 
-    const [favorites, setFavorites] = useState(() =>
-        safeParse("favoritesIds", [])
-    );
+    const [favorites, setFavorites] = useState([]);
 
     // Reviews
     const [myReviews, setMyReviews] = useState({});
@@ -23,6 +27,17 @@ const MoviesContextProvider = (props) => {
     const [watchlist, setWatchlist] = useState(() =>
         safeParse("watchlistIds", [])
     );
+
+    useEffect(() => {
+        const token = window.localStorage.getItem("token");
+
+        if (token) {
+            getFavorites().then(setFavorites);
+        } else {
+            setFavorites([]);
+        }
+    }, []);
+
 
     // Region & language
     const [region, setRegion] = useState(() => {
@@ -50,12 +65,20 @@ const MoviesContextProvider = (props) => {
     });
 
     // ---------------- Favorites ----------------
-    const addToFavorites = (movie) => {
-        setFavorites((prev) => (prev.includes(movie.id) ? prev : [...prev, movie.id]));
+    const addToFavorites = async (movie) => {
+        const newFavorite = await addFavorite(movie);
+        setFavorites((prev) =>
+            prev.some((f) => f.movieId === newFavorite.movieId)
+                ? prev
+                : [...prev, newFavorite]
+        );
     };
 
-    const removeFromFavorites = (movie) => {
-        setFavorites((prev) => prev.filter((id) => id !== movie.id));
+    const removeFromFavorites = async (movie) => {
+        await removeFavorite(movie.id);
+        setFavorites((prev) =>
+            prev.filter((f) => f.movieId !== movie.id)
+        );
     };
 
     // ---------------- Reviews ----------------
@@ -81,12 +104,6 @@ const MoviesContextProvider = (props) => {
     const isInWatchlist = (movieId) => watchlist.includes(movieId);
 
     // ---------------- Persist ----------------
-    useEffect(() => {
-        try {
-            localStorage.setItem("favoritesIds", JSON.stringify(favorites));
-        } catch { }
-    }, [favorites]);
-
     useEffect(() => {
         try {
             localStorage.setItem("watchlistIds", JSON.stringify(watchlist));
