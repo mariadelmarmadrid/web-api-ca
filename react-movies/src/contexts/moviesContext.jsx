@@ -75,11 +75,16 @@ const MoviesContextProvider = (props) => {
     };
 
     const removeFromFavorites = async (movie) => {
-        await removeFavorite(movie.id);
+        const fav = favorites.find((f) => f.movieId === movie.id);
+        if (!fav) return;
+
+        await removeFavorite(fav._id);
+
         setFavorites((prev) =>
-            prev.filter((f) => f.movieId !== movie.id)
+            prev.filter((f) => f._id !== fav._id)
         );
     };
+
 
     // ---------------- Reviews ----------------
     const addReview = (movie, review) => {
