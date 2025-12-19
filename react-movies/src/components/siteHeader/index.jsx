@@ -38,7 +38,7 @@ const SiteHeader = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const { region, setRegion, language, setLanguage } = useContext(MoviesContext);
 
-    const auth = useContext(AuthContext);
+    const { isAuthenticated, userName, signout } = useContext(AuthContext);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -51,7 +51,7 @@ const SiteHeader = () => {
         { label: "Now Playing", path: "/movies/now-playing" },
         { label: "Upcoming", path: "/movies/upcoming" },
         { label: "Top Rated", path: "/movies/top-rated" },
-        ...(auth.isAuthenticated
+        ...(isAuthenticated
             ? [
                 { label: "Favorites", path: "/movies/favorites" },
                 { label: "Watchlist", path: "/movies/watchlist" },
@@ -203,16 +203,16 @@ const SiteHeader = () => {
                                 </FormControl>
                                 <Divider orientation="vertical" flexItem sx={{ bgcolor: COLORS.border }} />
 
-                                {auth.isAuthenticated ? (
+                                {isAuthenticated ? (
                                     <Stack direction="row" spacing={1} alignItems="center">
                                         <Typography variant="body2">
-                                            Welcome {auth.userName}
+                                            Welcome {userName}
                                         </Typography>
                                         <Button
                                             size="small"
                                             variant="outlined"
                                             sx={{ color: "white", borderColor: "white" }}
-                                            onClick={auth.signout}
+                                            onClick={signout}
                                         >
                                             Logout
                                         </Button>

@@ -1,14 +1,42 @@
-import { useState, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { login, signup } from "../api/auth-api";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext(null);
 
 const AuthContextProvider = ({ children }) => {
     const existingToken = localStorage.getItem("token");
 
-    const [isAuthenticated, setIsAuthenticated] = useState(!!existingToken);
+    let initialUser = "";
+    let initialAuth = false;
+
+    if (existingToken) {
+        try {
+            const decoded = jwtDecode(existingToken.replace("BEARER ", ""));
+            initialUser = decoded.username;
+            initialAuth = true;
+        } catch {
+            localStorage.removeItem("token");
+        }
+    }
+
+    const [isAuthenticated, setIsAuthenticated] = useState(initialAuth);
     const [authToken, setAuthToken] = useState(existingToken);
-    const [userName, setUserName] = useState("");
+    const [userName, setUserName] = useState(initialUser);
+
+    useEffect(() => {
+        if (authToken) {
+            try {
+                const decoded = jwtDecode(authToken.replace("BEARER ", ""));
+                setUserName(decoded.username);
+                setIsAuthenticated(true);
+            } catch {
+                localStorage.removeItem("token");
+                setUserName("");
+                setIsAuthenticated(false);
+            }
+        }
+    }, [authToken]);
 
     // Store JWT token
     const setToken = (token) => {
@@ -38,9 +66,8 @@ const AuthContextProvider = ({ children }) => {
     // Logout
     const signout = () => {
         localStorage.removeItem("token");
-        setAuthToken(null);
-        setIsAuthenticated(false);
         setUserName("");
+        setIsAuthenticated(false);
     };
 
     return (
