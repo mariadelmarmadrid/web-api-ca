@@ -5,7 +5,8 @@ import {
     addFavorite,
     removeFavorite,
 } from "../api/favorites-api";
-
+import { useContext } from "react";
+import { AuthContext } from "./authContext";
 
 const safeParse = (key, fallback) => {
     try {
@@ -17,6 +18,8 @@ const safeParse = (key, fallback) => {
 };
 
 const MoviesContextProvider = (props) => {
+    const { isAuthenticated } = useContext(AuthContext);
+
     // Favorites 
     const [favorites, setFavorites] = useState([]);
 
@@ -29,14 +32,12 @@ const MoviesContextProvider = (props) => {
     );
 
     useEffect(() => {
-        const token = window.localStorage.getItem("token");
-
-        if (token) {
+        if (isAuthenticated) {
             getFavorites().then(setFavorites);
         } else {
             setFavorites([]);
         }
-    }, []);
+    }, [isAuthenticated]);
 
 
     // Region & language
