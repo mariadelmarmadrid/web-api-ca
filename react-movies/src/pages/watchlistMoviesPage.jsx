@@ -5,6 +5,7 @@ import { useQueries } from "@tanstack/react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
+import AddToFavoriteIcon from "../components/cardIcons/addToFavorites";
 
 const WatchlistMoviesPage = () => {
     const { watchlist } = useContext(MoviesContext);
@@ -46,7 +47,7 @@ const WatchlistMoviesPage = () => {
         <PageTemplate
             title="Watchlist Movies"
             movies={movies}
-            action={(movie) => <AddToPlaylistIcon movie={movie} />}
+            action={(movie) => <AddToFavoriteIcon movie={movie} />}
         />
     );
 };
