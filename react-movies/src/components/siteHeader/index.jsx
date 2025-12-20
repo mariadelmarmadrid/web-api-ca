@@ -55,8 +55,10 @@ const SiteHeader = () => {
             ? [
                 { label: "Favorites", path: "/movies/favorites" },
                 { label: "Watchlist", path: "/movies/watchlist" },
+                { label: "My Reviews", path: "/movies/reviews" },
             ]
             : []),
+
     ];
 
 

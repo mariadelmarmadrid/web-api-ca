@@ -1,7 +1,7 @@
 const BASE_URL = "http://localhost:8080/api/favorites";
 
 const authHeader = () => ({
-    Authorization: window.localStorage.getItem("token"),
+    Authorization: `Bearer ${window.localStorage.getItem("token")}`,
     "Content-Type": "application/json",
 });
 

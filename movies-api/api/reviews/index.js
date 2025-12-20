@@ -20,18 +20,26 @@ router.post("/", asyncHandler(async (req, res) => {
     try {
         const review = await Review.create({
             userId: req.user._id,
-            ...req.body, // movieId, content, rating
+            movieId: req.body.movieId,
+            content: req.body.content,
+            rating: req.body.rating,
         });
-        res.status(201).json(review);
+
+        return res.status(201).json(review);
     } catch (err) {
         if (err.code === 11000) {
             return res.status(409).json({
                 message: "You have already reviewed this movie",
             });
         }
-        throw err;
+
+        // IMPORTANT: do NOT throw, always respond
+        return res.status(400).json({
+            message: err.message,
+        });
     }
 }));
+
 
 router.get(
     "/movie/:movieId",

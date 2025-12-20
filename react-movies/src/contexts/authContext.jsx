@@ -12,7 +12,7 @@ const AuthContextProvider = ({ children }) => {
 
     if (existingToken) {
         try {
-            const decoded = jwtDecode(existingToken.replace("BEARER ", ""));
+            const decoded = jwtDecode(existingToken);
             initialUser = decoded.username;
             initialAuth = true;
         } catch {
@@ -27,7 +27,7 @@ const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         if (authToken) {
             try {
-                const decoded = jwtDecode(authToken.replace("BEARER ", ""));
+                const decoded = jwtDecode(authToken);
                 setUserName(decoded.username);
                 setIsAuthenticated(true);
             } catch {

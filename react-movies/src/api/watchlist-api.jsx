@@ -1,7 +1,7 @@
 const API_BASE = "http://localhost:8080/api/watchlist";
 
 const authHeader = () => ({
-    Authorization: localStorage.getItem("token"),
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
 
 export const getWatchlist = async () => {

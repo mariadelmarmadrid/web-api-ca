@@ -1,38 +1,22 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useForm, Controller } from "react-hook-form";
-import { MoviesContext } from "../../contexts/moviesContextValue";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router";
 
-
+import { addReview } from "../../api/reviews-api";
 
 const ratings = [
-    {
-        value: 5,
-        label: "Excellent",
-    },
-    {
-        value: 4,
-        label: "Good",
-    },
-    {
-        value: 3,
-        label: "Average",
-    },
-    {
-        value: 2,
-        label: "Poor",
-    },
-    {
-        value: 0,
-        label: "Terrible",
-    },
+    { value: 5, label: "Excellent" },
+    { value: 4, label: "Good" },
+    { value: 3, label: "Average" },
+    { value: 2, label: "Poor" },
+    { value: 0, label: "Terrible" },
 ];
 
 const styles = {
@@ -48,9 +32,6 @@ const styles = {
             marginTop: 2,
         },
     },
-    textField: {
-        width: "40ch",
-    },
     submit: {
         marginRight: 2,
     },
@@ -63,51 +44,53 @@ const styles = {
 };
 
 const ReviewForm = ({ movie }) => {
-    const context = useContext(MoviesContext);
     const [rating, setRating] = useState(3);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
-
-    const defaultValues = {
-        author: "",
-        review: "",
-        agree: false,
-        rating: "3",
-    };
-
     const {
         control,
-        formState: { errors },
         handleSubmit,
         reset,
-    } = useForm(defaultValues);
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            content: "",
+            rating: 3,
+        },
+    });
 
     const handleRatingChange = (event) => {
         setRating(event.target.value);
     };
 
-    const onSubmit = (review) => {
-        review.movieId = movie.id;
-        review.rating = rating;
-        // console.log(review);
-        context.addReview(movie, review);
-        setOpen(true); // NEW
+    const onSubmit = (data) => {
+        console.log("SUBMIT CLICKED", data);
+        addReview({
+            movieId: movie.id,
+            content: data.content,
+            rating: rating,
+        })
+            .then(() => setOpen(true))
+            .catch((err) => {
+                alert(err.message);
+            });
+
     };
 
 
     const handleSnackClose = () => {
         setOpen(false);
+        reset();
         navigate("/movies/favorites");
     };
-
-
 
     return (
         <Box component="div" sx={styles.root}>
             <Typography component="h2" variant="h3">
                 Write a review
             </Typography>
+
             <Snackbar
                 sx={styles.snack}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -125,73 +108,47 @@ const ReviewForm = ({ movie }) => {
                 </MuiAlert>
             </Snackbar>
 
-
-            <form sx={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form
+                style={styles.form}
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+            >
+                {/* REVIEW TEXT */}
                 <Controller
-                    name="author"
-                    control={control}
-                    rules={{ required: "Name is required" }}
-                    defaultValue=""
-                    render={({ field: { onChange, value } }) => (
-                        <TextField
-                            sx={{ width: "40ch" }}
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            onChange={onChange}
-                            value={value}
-                            id="author"
-                            label="Author's name"
-                            name="author"
-                            autoFocus
-                        />
-                    )}
-                />
-                {errors.author && (
-                    <Typography variant="h6" component="p">
-                        {errors.author.message}
-                    </Typography>
-                )}
-                <Controller
-                    name="review"
+                    name="content"
                     control={control}
                     rules={{
                         required: "Review cannot be empty.",
-                        minLength: { value: 10, message: "Review is too short" },
+                        minLength: {
+                            value: 10,
+                            message: "Review is too short",
+                        },
                     }}
-                    defaultValue=""
-                    render={({ field: { onChange, value } }) => (
+                    render={({ field }) => (
                         <TextField
+                            {...field}
                             variant="outlined"
                             margin="normal"
                             required
                             fullWidth
-                            name="review"
-                            value={value}
-                            onChange={onChange}
                             label="Review text"
-                            id="review"
                             multiline
                             minRows={10}
+                            error={!!errors.content}
+                            helperText={errors.content?.message}
                         />
                     )}
                 />
-                {errors.review && (
-                    <Typography variant="h6" component="p">
-                        {errors.review.message}
-                    </Typography>
-                )}
 
+                {/* RATING SELECT */}
                 <Controller
-                    control={control}
                     name="rating"
+                    control={control}
                     render={({ field }) => (
                         <TextField
-                            id="select-rating"
-                            select
-                            variant="outlined"
-                            label="Rating Select"
                             {...field}
+                            select
+                            label="Rating"
                             value={rating}
                             onChange={(e) => {
                                 field.onChange(e);
@@ -200,7 +157,10 @@ const ReviewForm = ({ movie }) => {
                             helperText="Don't forget your rating"
                         >
                             {ratings.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>
+                                <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                >
                                     {option.label}
                                 </MenuItem>
                             ))}
@@ -208,7 +168,8 @@ const ReviewForm = ({ movie }) => {
                     )}
                 />
 
-                <Box sx={styles.buttons}>
+                {/* BUTTONS */}
+                <Box sx={{ marginTop: 2 }}>
                     <Button
                         type="submit"
                         variant="contained"
@@ -221,13 +182,12 @@ const ReviewForm = ({ movie }) => {
                         type="reset"
                         variant="contained"
                         color="secondary"
-                        sx={styles.submit}
-                        onClick={() => {
+                        onClick={() =>
                             reset({
-                                author: "",
                                 content: "",
-                            });
-                        }}
+                                rating: 3,
+                            })
+                        }
                     >
                         Reset
                     </Button>
