@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import moviesRouter from './api/movies';
 import usersRouter from './api/users';
+import watchlistRouter from "./api/watchlist";
 import './db';
 import authenticate from './authenticate';
 import favoritesRouter from "./api/favorites";
@@ -33,6 +34,8 @@ app.use('/api/movies', moviesRouter);
 app.use('/api/users', usersRouter);
 
 app.use("/api/favorites", favoritesRouter);
+
+app.use("/api/watchlist", watchlistRouter);
 
 app.use(errHandler);
 
