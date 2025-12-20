@@ -4,7 +4,7 @@ import { MoviesContext } from "../contexts/moviesContextValue";
 import { useQueries } from "@tanstack/react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
-import AddToFavoritesIcon from "../components/cardIcons/addToFavorites";
+import AddToPlaylistIcon from "../components/cardIcons/addToPlaylist";
 
 const WatchlistMoviesPage = () => {
     const { watchlist } = useContext(MoviesContext);
@@ -14,31 +14,39 @@ const WatchlistMoviesPage = () => {
             <PageTemplate
                 title="Watchlist Movies"
                 movies={[]}
-                action={(movie) => <AddToFavoritesIcon movie={movie} />}
+                action={(movie) => <AddToPlaylistIcon movie={movie} />}
             />
         );
     }
 
+    // 🔒 FILTER INVALID ENTRIES
+    const validWatchlist = watchlist.filter(
+        (item) => typeof item.movieId === "number"
+    );
+
     const movieQueries = useQueries({
-        queries: watchlist.map((item) => ({
+        queries: validWatchlist.map((item) => ({
             queryKey: ["movie", { id: item.movieId }],
             queryFn: getMovie,
         })),
     });
 
-    const isLoading = movieQueries.some((q) => q.isLoading);
-    if (isLoading) return <Spinner />;
+    const isPending = movieQueries.some((q) => q.isPending);
+    if (isPending) return <Spinner />;
 
-    const movies = movieQueries.map((q) => {
-        q.data.genre_ids = q.data.genres.map((g) => g.id);
-        return q.data;
-    });
+    const movies = movieQueries
+        .filter((q) => q.data)
+        .map((q) => {
+            const movie = { ...q.data };
+            movie.genre_ids = movie.genres?.map((g) => g.id) || [];
+            return movie;
+        });
 
     return (
         <PageTemplate
             title="Watchlist Movies"
             movies={movies}
-            action={(movie) => <AddToFavoritesIcon movie={movie} />}
+            action={(movie) => <AddToPlaylistIcon movie={movie} />}
         />
     );
 };

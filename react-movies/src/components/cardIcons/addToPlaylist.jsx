@@ -13,7 +13,7 @@ const AddToPlaylistIcon = ({ movie }) => {
 
     const handleToggle = (e) => {
         e.preventDefault(); // prevent navigating when clicking inside the card
-        toggleWatchlist(movie.id);
+        toggleWatchlist(movie);
     };
 
     return (

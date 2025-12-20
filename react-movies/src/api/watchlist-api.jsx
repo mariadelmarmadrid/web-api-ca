@@ -9,19 +9,31 @@ export const getWatchlist = async () => {
     return res.json();
 };
 
-export const addWatchlist = async (movie) => {
+export const addToWatchlist = async (movie) => {
+    const payload = {
+        movieId: movie.id,
+        title: movie.title,
+        poster_path: movie.poster_path,
+    };
+
     const res = await fetch(API_BASE, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             ...authHeader(),
         },
-        body: JSON.stringify(movie),
+        body: JSON.stringify(payload),
     });
+
+    if (!res.ok) {
+        throw new Error("Failed to add to watchlist");
+    }
+
     return res.json();
 };
 
-export const removeWatchlist = async (id) => {
+
+export const removeFromWatchlist = async (id) => {
     await fetch(`${API_BASE}/${id}`, {
         method: "DELETE",
         headers: authHeader(),
