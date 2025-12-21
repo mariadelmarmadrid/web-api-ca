@@ -1,3 +1,9 @@
+/**
+ * Person Page
+ * Displays profile, details and filmography for an actor/crew member
+ * - Fetches person details (`getPerson`) and movie credits (`getPersonMovieCredits`)
+ * - Provides filters for departments and a sorted filmography
+ */
 import React, { useContext, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';

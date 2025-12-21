@@ -1,3 +1,9 @@
+/**
+ * Add Movie Review Page
+ * Page for writing a new review for a movie
+ * - Fetches movie details using `getMovie` (via react-query)
+ * - Displays `ReviewForm` inside `PageTemplate`
+ */
 import React from "react";
 import PageTemplate from "../components/templateMoviePage";
 import ReviewForm from "../components/reviewForm";

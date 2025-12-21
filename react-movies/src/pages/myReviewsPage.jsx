@@ -1,3 +1,10 @@
+/**
+ * My Reviews Page
+ * Lists reviews created by the logged-in user
+ * - Calls `getUserReviews` to load reviews
+ * - Fetches movie titles for each review via `getMovie`
+ * - Allows deleting a user's review via `deleteReview`
+ */
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";

@@ -1,3 +1,9 @@
+/**
+ * Upcoming Movies Page
+ * Shows movies that are scheduled for release in the near future
+ * - Fetches via `getUpcomingMovies` and filters by local release date
+ * - Renders using `PageTemplate`
+ */
 import React, { useContext } from "react";
 import { getUpcomingMovies } from "../api/tmdb-api";
 import PageTemplate from '../components/templateMovieListPage';

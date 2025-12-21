@@ -1,3 +1,10 @@
+/**
+ * Home Page
+ * Displays a paginated list of discovered movies (Discover)
+ * - Fetches movies via `getMovies` and uses `PageTemplate` for layout
+ * - Uses `MoviesContext` for `region` and `language` preferences
+ * - Each movie card has an action to add to favorites
+ */
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getMovies } from "../api/tmdb-api";

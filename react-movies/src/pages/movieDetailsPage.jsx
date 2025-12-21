@@ -1,3 +1,10 @@
+/**
+ * Movie Details Page
+ * Shows detailed information about a single movie
+ * - Fetches movie details via `getMovie`
+ * - Renders `MovieDetails`, `MovieCredits` and `MovieRecommendations`
+ * - Uses `MoviesContext` for region/language
+ */
 import React, { useContext } from "react";
 import { useParams } from 'react-router';
 import MovieDetails from "../components/movieDetails/";

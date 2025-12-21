@@ -1,3 +1,9 @@
+/**
+ * Now Playing Movies Page
+ * Displays currently playing movies (paginated)
+ * - Uses `getNowPlayingMovies` and `PageTemplate`
+ * - Considers `region` and `language` from `MoviesContext`
+ */
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getNowPlayingMovies } from "../api/tmdb-api";

@@ -1,3 +1,9 @@
+/**
+ * Cast & Crew Page
+ * Displays full cast and crew lists for a movie
+ * - Fetches credits via `getMovieCredits` and movie title via `getMovie`
+ * - Groups crew by department and shows cast in a grid
+ */
 import React, { useContext } from "react";
 import { useParams, Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";

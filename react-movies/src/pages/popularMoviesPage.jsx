@@ -1,3 +1,9 @@
+/**
+ * Popular Movies Page
+ * Shows a paginated list of currently popular movies from TMDB
+ * - Fetches via `getPopularMovies` and renders with `PageTemplate`
+ * - Uses `MoviesContext` for region/language
+ */
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPopularMovies } from "../api/tmdb-api";

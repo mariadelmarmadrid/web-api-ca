@@ -1,3 +1,8 @@
+/**
+ * Login Page
+ * Provides a login form and uses `AuthContext.authenticate` to sign in
+ * - Redirects to the originally requested page on successful login
+ */
 import { useContext, useState } from "react";
 import { Navigate, useLocation, Link } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";

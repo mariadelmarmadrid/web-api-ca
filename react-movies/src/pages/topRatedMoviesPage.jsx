@@ -1,3 +1,9 @@
+/**
+ * Top Rated Movies Page
+ * Displays a paginated list of top-rated movies from TMDB
+ * - Uses `getTopRatedMovies` and `PageTemplate`
+ * - Integrates with `MoviesContext` for prefs
+ */
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTopRatedMovies } from "../api/tmdb-api";

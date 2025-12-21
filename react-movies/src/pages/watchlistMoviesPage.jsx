@@ -1,3 +1,9 @@
+/**
+ * Watchlist Movies Page
+ * Shows movies the user added to their watchlist
+ * - Loads each movie via `getMovie` using `useQueries`
+ * - Renders results with `PageTemplate`
+ */
 import React, { useContext } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContextValue";

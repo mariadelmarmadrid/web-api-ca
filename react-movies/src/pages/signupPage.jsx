@@ -1,3 +1,8 @@
+/**
+ * Signup Page
+ * Allows a new user to register using `AuthContext.register`
+ * - Validates password confirmation and shows registration status
+ */
 import { useContext, useState } from "react";
 import { Navigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";

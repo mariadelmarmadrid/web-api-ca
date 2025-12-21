@@ -1,3 +1,9 @@
+/**
+ * Favorite Movies Page
+ * Displays movies the user has added to their favorites
+ * - Reads `favorites` from `MoviesContext` and maps them to movie objects
+ * - Provides actions to remove from favorites or write a review
+ */
 import React, { useContext } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { MoviesContext } from "../contexts/moviesContextValue";
