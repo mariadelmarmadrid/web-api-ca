@@ -15,6 +15,7 @@ import {
     TextField,
     Button,
     Stack,
+    Alert,
 } from "@mui/material";
 
 const SignupPage = () => {
@@ -25,18 +26,36 @@ const SignupPage = () => {
     const [passwordAgain, setPasswordAgain] = useState("");
     const [registered, setRegistered] = useState(false);
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = async () => {
+        setError(""); // Clear previous errors
+        
+        // Client-side validation
+        if (!userName.trim()) {
+            setError("Username is required.");
+            return;
+        }
+        
         if (password !== passwordAgain) {
-            setError("Passwords do not match");
+            setError("Passwords do not match.");
             return;
         }
 
-        const success = await auth.register(userName, password);
-        if (success) {
-            setRegistered(true);
-        } else {
-            setError("Registration failed. Username may already exist.");
+        setIsLoading(true);
+        
+        try {
+            const result = await auth.register(userName, password);
+            if (result) {
+                setRegistered(true);
+            } else {
+                // Registration failed - error message should come from backend
+                setError("Registration failed. Username may already exist or password doesn't meet requirements.");
+            }
+        } catch (err) {
+            setError(err.message || "An unexpected error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,10 +83,17 @@ const SignupPage = () => {
                             Create an account to save favourites and build your watchlist
                         </Typography>
 
+                        {error && (
+                            <Alert severity="error" onClose={() => setError("")}>
+                                {error}
+                            </Alert>
+                        )}
+
                         <TextField
                             label="Username"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            disabled={isLoading}
                             fullWidth
                         />
 
@@ -76,7 +102,8 @@ const SignupPage = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            helperText="Minimum 8 characters, 1 number & 1 symbol"
+                            helperText="Minimum 8 characters, 1 number & 1 special character (@$!%*#?&)"
+                            disabled={isLoading}
                             fullWidth
                         />
 
@@ -85,21 +112,17 @@ const SignupPage = () => {
                             type="password"
                             value={passwordAgain}
                             onChange={(e) => setPasswordAgain(e.target.value)}
+                            disabled={isLoading}
                             fullWidth
                         />
-
-                        {error && (
-                            <Typography color="error" variant="body2">
-                                {error}
-                            </Typography>
-                        )}
 
                         <Button
                             variant="contained"
                             size="large"
                             onClick={handleRegister}
+                            disabled={isLoading}
                         >
-                            Create Account
+                            {isLoading ? "Creating Account..." : "Create Account"}
                         </Button>
 
                         <Typography variant="body2" align="center">

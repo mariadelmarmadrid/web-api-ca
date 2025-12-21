@@ -15,6 +15,7 @@ import {
     TextField,
     Button,
     Stack,
+    Alert,
 } from "@mui/material";
 
 const LoginPage = () => {
@@ -22,12 +23,26 @@ const LoginPage = () => {
 
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
     const handleLogin = async () => {
-        await auth.authenticate(userName, password);
+        setError(""); // Clear previous errors
+        setIsLoading(true);
+        
+        try {
+            const success = await auth.authenticate(userName, password);
+            if (!success) {
+                setError("Login failed. Please check your credentials and try again.");
+            }
+        } catch (err) {
+            setError(err.message || "An unexpected error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (auth.isAuthenticated) {
@@ -54,11 +69,18 @@ const LoginPage = () => {
                             Sign in to access your favourites and watchlist
                         </Typography>
 
+                        {error && (
+                            <Alert severity="error" onClose={() => setError("")}>
+                                {error}
+                            </Alert>
+                        )}
+
                         <TextField
                             label="Username"
                             variant="outlined"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            disabled={isLoading}
                             fullWidth
                         />
 
@@ -68,6 +90,7 @@ const LoginPage = () => {
                             variant="outlined"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            disabled={isLoading}
                             fullWidth
                         />
 
@@ -75,8 +98,9 @@ const LoginPage = () => {
                             variant="contained"
                             size="large"
                             onClick={handleLogin}
+                            disabled={isLoading}
                         >
-                            Login
+                            {isLoading ? "Logging in..." : "Login"}
                         </Button>
 
                         <Typography variant="body2" align="center">
